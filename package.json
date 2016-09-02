@@ -1,0 +1,11 @@
+{
+  "name": "mon-go",
+  "version": "0.0.1",
+  "description": "Mongodb wrapper for easy bulk-upsert-replace",
+  "main": "index.js",
+  "author": "astur <astur@yandex.ru> (http://kozlov.am/)",
+  "license": "MIT",
+  "dependencies": {
+    "mongodb": "^2.2.9"
+  }
+}
