@@ -7,7 +7,12 @@ module.exports = function (keys, collectionName, limit, callback){
         if(err){
             callback(err);
         }
+        var k = {};
+        keys.forEach(function(v){
+            k[v] = 1;
+        });
         var flats = db.collection(collectionName);
+        flats.createIndex(k, {unique: true});
         var bulk = flats.initializeUnorderedBulkOp();
         var counter = 0;
 
