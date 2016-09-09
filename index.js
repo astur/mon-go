@@ -2,6 +2,16 @@ var MongoClient = require('mongodb').MongoClient;
 var mongoString = process.env.MONGOLAB_URI ||
     'mongodb://localhost:27017/test';
 
+var finalResult = {
+    nModified: 0,
+    nUpserted: 0,
+};
+
+function updateFinalResult(result){
+    finalResult.nModified += result.nModified;
+    finalResult.nUpserted += result.nUpserted;
+}
+
 module.exports = function (keys, collectionName, limit, callback){
     MongoClient.connect(mongoString, function(err, db) {
         if(err){
@@ -17,12 +27,12 @@ module.exports = function (keys, collectionName, limit, callback){
         var counter = 0;
 
         callback(null, function(doc){
-            if (!doc) {
-                try{
-                    bulk.execute(function(){
+            if (typeof doc === 'function') {
+                bulk.execute()
+                    .then(updateFinalResult)
+                    .then(function(){
+                        doc(finalResult);
                     });
-                } catch(e) {
-                }
             } else {
                 var q = {};
                 keys.forEach(function(v){
@@ -31,7 +41,8 @@ module.exports = function (keys, collectionName, limit, callback){
                 bulk.find(q).upsert().replaceOne(doc);
                 counter ++;
                 if(counter % limit === 0){
-                    bulk.execute();
+                    bulk.execute()
+                        .then(updateFinalResult);
                     bulk = flats.initializeUnorderedBulkOp();
                 }
             }
