@@ -20,10 +20,8 @@ module.exports = function (keys, collectionName, limit, callback){
             if (!doc) {
                 try{
                     bulk.execute(function(){
-                        db.close();
                     });
                 } catch(e) {
-                    db.close();
                 }
             } else {
                 var q = {};
@@ -37,6 +35,6 @@ module.exports = function (keys, collectionName, limit, callback){
                     bulk = flats.initializeUnorderedBulkOp();
                 }
             }
-        });
+        }, db);
     });
 };
