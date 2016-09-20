@@ -36,11 +36,15 @@ module.exports = function (keys, collectionName, limit, callback){
 
             return function(doc){
                 if (typeof doc === 'function') {
-                    bulk.execute()
-                        .then(updateFinalResult)
-                        .then(function(){
-                            doc(finalResult);
-                        });
+                    if(bulk.s.currentIndex > 0){
+                        bulk.execute()
+                            .then(updateFinalResult)
+                            .then(function(){
+                                doc(finalResult);
+                            });
+                    } else {
+                        doc(finalResult);
+                    }
                 } else {
                     var q = {};
                     keys.forEach(function(v){
