@@ -13,6 +13,12 @@ module.exports = function (keys, collectionName, limit, callback){
         });
 
         var save = (function(cName){
+
+            if(/^-/.test(cName)){
+                cName = cName.slice(1);
+                db.dropCollection(cName);
+            }
+
             var finalResult = {
                 nModified: 0,
                 nUpserted: 0,
