@@ -50,7 +50,7 @@ module.exports = function (keys, collectionName, limit, callback){
                     keys.forEach(function(v){
                         q[v] = doc[v];
                     });
-                    bulk.find(q).upsert().replaceOne(doc);
+                    bulk.find(q).upsert().updateOne({$set: doc});
                     counter ++;
                     if(counter % limit === 0){
                         bulk.execute()
