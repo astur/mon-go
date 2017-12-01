@@ -5,7 +5,7 @@ var mongoString = process.env.MONGOLAB_URI ||
 module.exports = function (keys, collectionName, limit, callback){
     MongoClient.connect(mongoString, function(err, db) {
         if(err){
-            callback(err);
+            return callback(err);
         }
         var k = {};
         keys.forEach(function(v){
